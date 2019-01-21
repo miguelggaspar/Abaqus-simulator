@@ -1,0 +1,118 @@
+/** @mainpage Projeto Final
+ *
+\section intro_sec Descrição Geral
+
+\n O Projeto tem como principal foco a monitorização e controlo de
+um simulador virtual (Abaqus), através da sua comunicação com um processo
+responsável por gerir as comunicações do sistema. A monitorização é feita
+através da interface gráfica desenvolvida em GTK.
+
+\author  Miguel Gaspar
+
+\section sis_sec Sistema Remoto
+O sistema remoto utilizado é um servidor que executa simulações no Abaqus pela
+\a command \a line \a interface (CLI) através de um shell script.
+\code{.sh}
+# Execute abaqus cae without GUI command to start simulation with input parameters
+# Carful, if you want to add more parameters , you need to add them here
+#and set them in the python script accordingly
+/usr/simulia/abaqus/Commands/abaqus cae noGUI=../src/SimScripts/beam.py -- $1 $2 $3 $4
+/usr/simulia/abaqus/Commands/abaqus cae noGUI=../src/SimScripts/abaqus_read_odb.py -- $4
+\endcode
+
+Estes comandos sao executados com um script
+em Python, em que o kernel do Abaqus interpreta e executa a simulação descrita
+por este. (Forneço tambem dois documentos pdf de como fazer scripts em python)
+
+* @image html Diagram.png "Abaqus interface de Scripting e CAE"
+
+Depois da simulaçao efetuada é gerado um ficheiro .odb que contém
+imensos dados sobre a simulação. Esses dados podem ser aproveitados, como por exemplo
+para a geração de uma imagem da simulação das tensões, da seguinte forma:
+\code {.py}
+v = 'Iso' ; o = 'S' ; c = 'S11' ; s = 0 ; f = -1
+myViewport.odbDisplay.display.setValues(plotState=(CONTOURS_ON_DEF, ))
+myViewport.odbDisplay.setFrame(step=s, frame=f)
+
+myViewport.odbDisplay.setPrimaryVariable(variableLabel=o,outputPosition=INTEGRATION_POINT,refinement=(COMPONENT, c), )
+path_filename = '%s_step-%s_%s_%s_%s' % (myOdb.name.replace('.odb',''),s,o,c,v)
+try:
+    myViewport.view.fitView()
+    session.printToFile(path_filename+'.png', PNG, (myViewport,))
+    print('saving %s' % path_filename)
+except:
+    pass
+\endcode
+
+ * @image html stress.png "Imagem gerada pelo código acima referido (Tensões S,S11)."
+\n
+
+\section pros_sec Divisão dos Processos
+
+Consiste na criação da divisão através do fork(), de dois processos que ocorrem
+em simultâneo e estabelecer uma comunicação entre ambos por memória partilhada.
+
+O processo GUIMain() que contém toda a configuração e callbacks associados
+à programação em Gtk+. E o processo ManagerMain() que coordena a informação
+entre a interface gráfica e as simulações.
+
+Para a memória partilhada foi criada uma estrutura com as seguites variáveis:
+\code{.c}
+
+struct datashr
+{
+    int simstatus;    // simulation status 0-failed  1-succeded
+    int flag;         // 1-simulation was submited
+    char length[100];
+    char youngM[100];
+    char poisson[100];
+    char jobname[100];
+}; //  struct data for shared memory
+\endcode
+
+De seguida pode-se ver uma visão global do sistema.
+* @image html arquitetura.png "Arquitetura global do Sistema."
+
+\section gui_sec Interface Gráfica
+
+* @image html gui.png "Interface gráfica."
+
+É composta por 4 entrys, cada entry representa um input para a simulação (comprimento da viga,
+modulo de young, coeficiente de poisson e nome da simulação). Um botão para
+inicializar a simulação e outro para fechar a aplicação.
+É composta por várias callbacks, on_simulation_clicked() verifica se as entrys
+estão vazias e envia para as variáveis associadas à shared memory a confirmação
+(data->flag=1) que a simulação deve ser submetida.
+Quando a simulação acaba de ser executada, o gestor de comunicações muda o valor
+do data->simstatus para 1 que indica à interface que já pode ativar os butões
+ChangeButtons() de visualização. Cada botão tem a sua callback associada
+à imagem que lhe corresponde.
+O programa só admite todos os caracteres no job name, por sua vez, se for submetido
+alguma letra em alguma outra entry, irá aparecer uma imagem de
+erro (como está apresentada numa das imagens seguintes).
+
+\n
+Exemplos da interface após a realização de uma simulação.
+
+* @image html sim_stress.png "Tensões."
+\n
+\n
+* @image html sim_displacement.png "Deslocamentos."
+\n
+\n
+* @image html sim_graph.png "Gráficos."
+\n
+\n
+* @image html sim_error.png "Erro quando caracteres invalidos sao inseridos em alguma entry."
+
+\section melhorias_sec Propostas de Melhoria
+
+Este método é de facto poderoso, tanto no aproveitamento dos dados gerados pela
+simulação, como nos parâmetros de entrada da simulação, e tambem no poder que o programador
+ganha ao usar scripts automatizados ao invés de utilizar a confusa e eneficiente
+interface gráfica do Abaqus. Porém para isto acontecer verdadeiramente, era necessário uma maior
+análise e estudo dos parametros explicados anteriormente.
+Outra melhoria seria o servidor enviar para o gestor de comunicações os dados
+da simulação, em vez de apenas avisar quando a simulação estivesse concluída.
+
+*/
