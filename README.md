@@ -18,7 +18,6 @@ Abaqus 6.14
 GTK+
 ```
 
-![test](https://i.imgur.com/z5aP8wA.png)
 
 ### Installing
 
