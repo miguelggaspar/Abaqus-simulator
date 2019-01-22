@@ -31,6 +31,18 @@ Then, install GTK+ :
 sudo apt-get install libgtk-3-dev
 ```
 
+After Installing GTK+ and Abaqus, run the following commands:
+
+```
+mkdir build
+cd build
+cmake ..
+make
+./server <port number>
+./Gtkgui <port number>
+```
+
+
 ### Examples
 
 ![test](https://i.imgur.com/z5aP8wA.png)
@@ -43,7 +55,7 @@ sudo apt-get install libgtk-3-dev
 
 ## Authors
 
-* **Miguel Gaspar** - *Initial work* - [PurpleBooth](https://github.com/miguelggaspar)
+* **Miguel Gaspar** - *Initial work* - [Abaqus-simulator](https://github.com/miguelggaspar)
 
 See also the list of [contributors](https://github.com/miguelggaspar/Abaqus-simulator/graphs/contributors) who participated in this project.
 
