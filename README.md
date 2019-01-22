@@ -1,6 +1,9 @@
 # Abaqus-simulator
 
-This Project aims on creating an
+This project aims at creating a program which supports the graphics interface and the communications between the GUI and a remote system (server). These processes may communicate by signals but need to use one or more shared memories to exchange information.
+In this case, it was developed a monitoring system from a finite element program Abaqus. This monitoring is performed through a graphic interface (GTK). However
+this application only lets you perform a predefined beam loading test and only changing it's length, Young module and Poisson Coefficient.
+
 
 ## Getting Started
 
@@ -11,10 +14,8 @@ These instructions will get you a copy of the project up and running on your loc
 Things you need to install if you already haven't:
 
 ```
-Scikit-Learn
-Scipy
-Pandas
-Matplotlib
+Abaqus 6.14
+GTK+
 ```
 
 ![test](https://i.imgur.com/z5aP8wA.png)
@@ -23,70 +24,30 @@ Matplotlib
 
 A step by step series of examples that tell you have to get a development env running
 
-Say what the step will be
+First you need to [install](https://github.com/Solid-Mechanics/Install-ABAQUS-on-Ubuntu) the Abaqus Finite Element Analysis software on your linux machine.
+
+Then, install GTK+ :
 
 ```
 sudo apt-get install libgtk-3-dev
 ```
 
-And repeat
+### Examples
 
-```
-until finished
-```
+![test](https://i.imgur.com/z5aP8wA.png)
 
-End with an example of getting some data out of the system or using it for a little demo
+![test](https://i.imgur.com/EhgbFBk.png)
 
-## Running the tests
+![test](https://i.imgur.com/v08BXHi.png)
 
-Explain how to run the automated tests for this system
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Miguel Gaspar** - *Initial work* - [PurpleBooth](https://github.com/miguelggaspar)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/miguelggaspar/Abaqus-simulator/graphs/contributors) who participated in this project.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
